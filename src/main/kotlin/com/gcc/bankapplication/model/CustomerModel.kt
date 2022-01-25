@@ -9,6 +9,6 @@ data class CustomerModel(
     val lastName: String,
     val birth_date: Date,
     val nationality: Nationalities,
-    val document: DocumentModel,
+    val document: DocumentModel
 ) {
 }
