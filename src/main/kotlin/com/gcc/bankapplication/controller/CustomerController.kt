@@ -17,14 +17,21 @@ class CustomerController(
 ) {
 
     @GetMapping("/api/customers")
-    fun findAll(): List<Customer> {
-        return customerService.findAll()
+    fun findAll(): List<CustomerResponse> {
+        val customers = customerService.findAll().map {
+            it.toCustomerResponse(addressService.findByCustomer(it).map { it.toAddressResponse() })
+        }
+
+        println(customers)
+
+        return customers
     }
 
     @GetMapping("/api/customers/{customerId}")
     fun findById(@PathVariable customerId: String): CustomerResponse {
         val customer = customerService.findById(UUID.fromString(customerId))
         val addresses = addressService.findByCustomer(customer).map { it.toAddressResponse() }
+
         println(customer.toCustomerResponse(addresses))
 
         return customer.toCustomerResponse(addresses)
