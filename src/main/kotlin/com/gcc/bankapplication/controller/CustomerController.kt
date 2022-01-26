@@ -23,6 +23,6 @@ class CustomerController(
     @PostMapping("/api/customers")
     @ResponseStatus(HttpStatus.CREATED)
     fun createCustomer(@RequestBody customerRequest: PostCustomerRequest){
-        customerService.createCustomer(customerRequest.toCustomer())
+        customerService.createCustomer(customerRequest.toCustomer(), customerRequest.addresses)
     }
 }

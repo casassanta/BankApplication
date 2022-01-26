@@ -10,7 +10,7 @@ CREATE TABLE customer(
 
 CREATE TABLE address(
     id UUID primary key,
-    postCode text not null,
+    post_code text not null,
     address text not null,
     number text not null,
     complement text,
