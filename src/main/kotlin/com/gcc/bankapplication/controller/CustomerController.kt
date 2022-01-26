@@ -1,6 +1,7 @@
 package com.gcc.bankapplication.controller
 
-import com.gcc.bankapplication.model.CustomerModel
+import com.gcc.bankapplication.controller.request.PostCustomerRequest
+import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.service.CustomerService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -15,9 +16,14 @@ class CustomerController(
 ) {
 
     @GetMapping("/api/customers")
-    fun findAll(): List<CustomerModel> {
+    fun findAll(): List<Customer> {
         return customerService.findAll()
     }
 
+    @PostMapping("/api/customers")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun createCustomer(@RequestBody customerRequest: PostCustomerRequest){
+        customerService.createCustomer(customerRequest.toCustomer())
+    }
 
 }
