@@ -1,5 +1,6 @@
 package com.gcc.bankapplication.model
 
+import com.gcc.bankapplication.controller.response.AddressResponse
 import com.gcc.bankapplication.model.enums.AddressType
 import java.util.*
 import javax.persistence.*
@@ -18,4 +19,16 @@ data class Address(
 
     @ManyToOne
     val customer: Customer
-)
+){
+
+    fun toAddressResponse(): AddressResponse{
+        return AddressResponse(
+            id = this.id,
+            type = this.type,
+            postCode = this.postCode,
+            address = this.address,
+            number = this.number,
+            complement = this.complement
+        )
+    }
+}
