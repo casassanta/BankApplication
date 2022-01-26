@@ -19,6 +19,7 @@ class CustomerController(
 
     @GetMapping("/api/customers")
     fun findAll(): List<CustomerResponse> {
+        println("oi")
         return customerService.findAll().map { customer ->
             customer.toCustomerResponse(addressService.findByCustomer(customer).map { address -> address.toAddressResponse() })
         }
