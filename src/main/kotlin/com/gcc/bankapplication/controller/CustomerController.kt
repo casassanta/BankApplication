@@ -12,8 +12,8 @@ import java.util.*
 
 @Controller
 class CustomerController(
-    val customerService: CustomerService,
-    val addressService: AddressService
+    private val customerService: CustomerService,
+    private val addressService: AddressService
 ) {
 
     @GetMapping("/api/customers")

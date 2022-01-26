@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class AddressService(
-    val addressRepository: AddressRepository
+    private val addressRepository: AddressRepository
 ) {
 
     fun findByCustomer(customer: Customer): List<Address>{
