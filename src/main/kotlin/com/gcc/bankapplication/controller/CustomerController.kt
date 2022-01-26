@@ -6,11 +6,12 @@ import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.service.AddressService
 import com.gcc.bankapplication.service.CustomerService
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
-@Controller
+@RestController
 class CustomerController(
     private val customerService: CustomerService,
     private val addressService: AddressService
@@ -18,21 +19,15 @@ class CustomerController(
 
     @GetMapping("/api/customers")
     fun findAll(): List<CustomerResponse> {
-        val customers = customerService.findAll().map {
-            it.toCustomerResponse(addressService.findByCustomer(it).map { it.toAddressResponse() })
+        return customerService.findAll().map { customer ->
+            customer.toCustomerResponse(addressService.findByCustomer(customer).map { address -> address.toAddressResponse() })
         }
-
-        println(customers)
-
-        return customers
     }
 
     @GetMapping("/api/customers/{customerId}")
     fun findById(@PathVariable customerId: String): CustomerResponse {
         val customer = customerService.findById(UUID.fromString(customerId))
-        val addresses = addressService.findByCustomer(customer).map { it.toAddressResponse() }
-
-        println(customer.toCustomerResponse(addresses))
+        val addresses = addressService.findByCustomer(customer).map { address -> address.toAddressResponse() }
 
         return customer.toCustomerResponse(addresses)
     }
