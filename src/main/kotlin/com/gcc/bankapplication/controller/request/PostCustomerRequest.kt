@@ -11,7 +11,8 @@ data class PostCustomerRequest(
     @JsonAlias("birthdate")
     val birthDate: Date,
     val nationality: Nationalities,
-    val document: PostDocumentRequest
+    val document: PostDocumentRequest,
+    val addresses: List<PostAddressRequest>
 ) {
 
     fun toCustomer(): Customer {
@@ -24,4 +25,5 @@ data class PostCustomerRequest(
             document = this.document.toDocument()
         )
     }
+
 }
