@@ -1,5 +1,6 @@
 package com.gcc.bankapplication.model
 
+import com.gcc.bankapplication.controller.response.DocumentResponse
 import com.gcc.bankapplication.model.enums.DocumentType
 import javax.persistence.Embeddable
 import javax.persistence.EnumType
@@ -11,4 +12,12 @@ data class Document(
     @Enumerated(EnumType.STRING)
     val type: DocumentType,
     val number: String
-)
+){
+
+    fun toDocumentResponse(): DocumentResponse{
+        return DocumentResponse(
+            type = this.type,
+            number = this.number
+        )
+    }
+}

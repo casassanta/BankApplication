@@ -5,6 +5,7 @@ import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.repository.AddressRepository
 import com.gcc.bankapplication.repository.CustomerRepository
 import org.springframework.stereotype.Service
+import java.util.*
 
 
 @Service
@@ -19,7 +20,10 @@ class CustomerService(
 
     fun createCustomer(customer: Customer, addresses: List<PostAddressRequest>){
         val customerSaved = customerRepository.save(customer)
-
         addresses.map { addressRepository.save(it.toAddress(customerSaved)) }
+    }
+
+    fun findById(customerId: UUID): Customer {
+        return customerRepository.findById(customerId).orElseThrow()
     }
 }
