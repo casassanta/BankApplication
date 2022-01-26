@@ -6,18 +6,20 @@ import com.gcc.bankapplication.repository.AddressRepository
 import com.gcc.bankapplication.repository.CustomerRepository
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.transaction.Transactional
 
 
 @Service
 class CustomerService(
-    val customerRepository: CustomerRepository,
-    val addressRepository: AddressRepository
+    private val customerRepository: CustomerRepository,
+    private val addressRepository: AddressRepository
 ) {
 
     fun findAll(): List<Customer>{
         return customerRepository.findAll()
     }
 
+    @Transactional
     fun createCustomer(customer: Customer, addresses: List<PostAddressRequest>){
         val customerSaved = customerRepository.save(customer)
         addresses.map { addressRepository.save(it.toAddress(customerSaved)) }
