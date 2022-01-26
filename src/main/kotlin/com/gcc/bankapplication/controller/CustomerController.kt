@@ -25,5 +25,4 @@ class CustomerController(
     fun createCustomer(@RequestBody customerRequest: PostCustomerRequest){
         customerService.createCustomer(customerRequest.toCustomer())
     }
-
 }
