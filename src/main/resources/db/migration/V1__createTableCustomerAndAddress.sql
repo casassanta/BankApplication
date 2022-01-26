@@ -4,8 +4,8 @@ CREATE TABLE customer(
     last_name text not null,
     birth_date date not null,
     nationality text not null,
-    document_type text not null unique,
-    document_number text not null unique
+    type text not null unique,
+    number text not null unique
 );
 
 CREATE TABLE address(
