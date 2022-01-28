@@ -4,14 +4,27 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.enums.Nationalities
 import java.util.*
+import javax.validation.Valid
+import javax.validation.constraints.Pattern
+
 
 data class PostCustomerRequest(
+
+    @field:Pattern( regexp = "^[a-zA-Z]+\$", message = "Invalid characters for firstName.")
     val firstName: String,
+
+    @field:Pattern( regexp = "^[a-zA-Z]+\$", message = "Invalid characters for lastName.")
     val lastName: String,
+
     @JsonAlias("birthdate")
     val birthDate: Date,
+
     val nationality: Nationalities,
+
+    @field:Valid
     val document: PostDocumentRequest,
+
+    @field:Valid
     val addresses: List<PostAddressRequest>
 ) {
 
