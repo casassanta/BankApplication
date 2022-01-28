@@ -2,14 +2,12 @@ package com.gcc.bankapplication.controller
 
 import com.gcc.bankapplication.controller.request.PostCustomerRequest
 import com.gcc.bankapplication.controller.response.CustomerResponse
-import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.service.AddressService
 import com.gcc.bankapplication.service.CustomerService
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.validation.Valid
 
 @RestController
 class CustomerController(
@@ -19,7 +17,6 @@ class CustomerController(
 
     @GetMapping("/api/customers")
     fun findAll(): List<CustomerResponse> {
-        println("oi")
         return customerService.findAll().map { customer ->
             customer.toCustomerResponse(addressService.findByCustomer(customer).map { address -> address.toAddressResponse() })
         }
@@ -35,7 +32,8 @@ class CustomerController(
 
     @PostMapping("/api/customers")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createCustomer(@RequestBody customerRequest: PostCustomerRequest){
+    fun createCustomer(@RequestBody @Valid customerRequest: PostCustomerRequest){
         customerService.createCustomer(customerRequest.toCustomer(), customerRequest.addresses)
     }
+
 }

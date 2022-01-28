@@ -11,7 +11,6 @@ data class Customer(
 
     @Id
     val id: UUID = UUID.randomUUID(),
-
     val firstName: String,
     val lastName: String,
     val birthDate: Date,
