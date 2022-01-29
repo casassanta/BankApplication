@@ -45,4 +45,10 @@ class CustomerController(
         customerService.createCustomer(customerRequest.toCustomer(), customerRequest.addresses)
     }
 
+    @DeleteMapping("api/customers/{customerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteCustomer(@PathVariable customerId: String){
+        customerService.delete(UUID.fromString(customerId))
+    }
+
 }

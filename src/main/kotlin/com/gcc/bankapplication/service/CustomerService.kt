@@ -2,6 +2,7 @@ package com.gcc.bankapplication.service
 
 import com.gcc.bankapplication.controller.request.PostAddressRequest
 import com.gcc.bankapplication.model.Customer
+import com.gcc.bankapplication.model.enums.CustomerStatus
 import com.gcc.bankapplication.repository.AddressRepository
 import com.gcc.bankapplication.repository.CustomerRepository
 import org.springframework.stereotype.Service
@@ -27,5 +28,11 @@ class CustomerService(
 
     fun findById(customerId: UUID): Customer {
         return customerRepository.findById(customerId).orElseThrow()
+    }
+
+    fun delete(customerId: UUID){
+        var customer = findById(customerId)
+        customer.status = CustomerStatus.INACTIVE
+        customerRepository.save(customer)
     }
 }

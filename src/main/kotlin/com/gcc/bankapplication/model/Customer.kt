@@ -2,6 +2,7 @@ package com.gcc.bankapplication.model
 
 import com.gcc.bankapplication.controller.response.AddressResponse
 import com.gcc.bankapplication.controller.response.CustomerResponse
+import com.gcc.bankapplication.model.enums.CustomerStatus
 import com.gcc.bankapplication.model.enums.Nationalities
 import java.time.LocalDate
 import java.util.*
@@ -12,13 +13,20 @@ data class Customer(
 
     @Id
     val id: UUID = UUID.randomUUID(),
+
     val firstName: String,
+
     val lastName: String,
+
     val birthDate: LocalDate,
 
     @Enumerated(EnumType.STRING)
     val nationality: Nationalities,
-    val document: Document
+
+    val document: Document,
+
+    @Enumerated(EnumType.STRING)
+    var status: CustomerStatus = CustomerStatus.ACTIVE
 ) {
 
     fun toCustomerResponse(addresses: List<AddressResponse>): CustomerResponse{
@@ -29,7 +37,8 @@ data class Customer(
             birthDate = this.birthDate,
             nationality =  this.nationality,
             document = this.document.toDocumentResponse(),
-            addresses = addresses
+            addresses = addresses,
+            status = this.status
         )
     }
 }
