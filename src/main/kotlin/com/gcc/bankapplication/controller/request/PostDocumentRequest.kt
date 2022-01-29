@@ -2,7 +2,6 @@ package com.gcc.bankapplication.controller.request
 
 import com.gcc.bankapplication.model.Document
 import com.gcc.bankapplication.model.enums.DocumentType
-import javax.validation.Valid
 import javax.validation.constraints.Pattern
 
 data class PostDocumentRequest(

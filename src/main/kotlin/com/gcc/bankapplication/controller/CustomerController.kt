@@ -6,6 +6,8 @@ import com.gcc.bankapplication.service.AddressService
 import com.gcc.bankapplication.service.CustomerService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 import javax.validation.Valid
 
@@ -33,6 +35,13 @@ class CustomerController(
     @PostMapping("/api/customers")
     @ResponseStatus(HttpStatus.CREATED)
     fun createCustomer(@RequestBody @Valid customerRequest: PostCustomerRequest){
+
+        try{
+            DateTimeFormatter.ofPattern("uuuu-MM-dd").parse(customerRequest.birthDate.toString())
+        }catch(e: DateTimeParseException){
+            null
+        }
+
         customerService.createCustomer(customerRequest.toCustomer(), customerRequest.addresses)
     }
 

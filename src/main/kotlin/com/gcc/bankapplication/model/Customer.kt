@@ -3,6 +3,7 @@ package com.gcc.bankapplication.model
 import com.gcc.bankapplication.controller.response.AddressResponse
 import com.gcc.bankapplication.controller.response.CustomerResponse
 import com.gcc.bankapplication.model.enums.Nationalities
+import java.time.LocalDate
 import java.util.*
 import javax.persistence.*
 
@@ -13,7 +14,7 @@ data class Customer(
     val id: UUID = UUID.randomUUID(),
     val firstName: String,
     val lastName: String,
-    val birthDate: Date,
+    val birthDate: LocalDate,
 
     @Enumerated(EnumType.STRING)
     val nationality: Nationalities,
