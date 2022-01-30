@@ -1,7 +1,6 @@
 package com.gcc.bankapplication.model
 
 import com.gcc.bankapplication.controller.response.AddressResponse
-import com.gcc.bankapplication.model.enums.AddressType
 import java.util.*
 import javax.persistence.*
 
@@ -11,7 +10,7 @@ data class Address(
     @Id
     val id: UUID = UUID.randomUUID(),
     @Enumerated(EnumType.STRING)
-    val type: AddressType,
+    val type: Type,
     val postCode: String,
     val address: String,
     val number: String,
@@ -20,6 +19,11 @@ data class Address(
     @ManyToOne
     val customer: Customer
 ){
+
+    enum class Type {
+        DELIVERY,
+        BILLING
+    }
 
     fun toAddressResponse(): AddressResponse{
         return AddressResponse(

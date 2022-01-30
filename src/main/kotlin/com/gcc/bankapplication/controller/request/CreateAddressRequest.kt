@@ -2,14 +2,12 @@ package com.gcc.bankapplication.controller.request
 
 import com.gcc.bankapplication.model.Address
 import com.gcc.bankapplication.model.Customer
-import com.gcc.bankapplication.model.enums.AddressType
 import java.util.*
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Pattern
 
-data class PostAddressRequest(
+data class CreateAddressRequest(
 
-    val type: AddressType,
+    val type: Address.Type,
 
     @field:NotBlank
     val postCode: String,
@@ -22,7 +20,7 @@ data class PostAddressRequest(
 
     val complement: String? = null,
 
-) {
+    ) {
 
     fun toAddress(customer: Customer): Address{
         return Address(
