@@ -1,6 +1,7 @@
 package com.gcc.bankapplication.service
 
 import com.gcc.bankapplication.controller.request.CreateAddressRequest
+import com.gcc.bankapplication.model.Address
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.enums.Nationality
 import com.gcc.bankapplication.repository.AddressRepository
@@ -37,6 +38,12 @@ class CustomerService(
     fun delete(customerId: UUID) {
         val customer = findById(customerId).copy(status = Customer.Status.INACTIVE)
         customerRepository.save(customer)
+    }
+
+    @Transactional
+    fun update(customer: Customer, addresses: List<Address>){
+        customerRepository.save(customer)
+        addresses.map { addressRepository.save(it) }
     }
 
 }

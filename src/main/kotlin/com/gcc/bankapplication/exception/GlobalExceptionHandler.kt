@@ -3,13 +3,11 @@ package com.gcc.bankapplication.exception
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import java.time.format.DateTimeParseException
 import javax.persistence.EntityNotFoundException
-import kotlin.Exception
 
 @ControllerAdvice
 class GlobalExceptionHandler {
@@ -18,9 +16,28 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException::class)
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<ErrorResponse> {
-        logger.info("Handling not found entity exception", e)
+      logger.info("Handling not found entity exception", e)
+      return ResponseEntity<ErrorResponse>(
+          ErrorResponse("Entity Not found"),
+          HttpStatus.NOT_FOUND
+      )
+    }
+
+    @ExceptionHandler(JpaObjectRetrievalFailureException::class)
+    fun handleJpaObjectRetrievalFailureException(e: JpaObjectRetrievalFailureException): ResponseEntity<ErrorResponse> {
+        logger.info("Handling Jpa Object Retieval Failure Exception", e)
+
+        when{
+            e.cause is EntityNotFoundException -> {
+                return ResponseEntity<ErrorResponse>(
+                    ErrorResponse("Entity Not found"),
+                    HttpStatus.NOT_FOUND
+                )
+            }
+        }
+
         return ResponseEntity<ErrorResponse>(
-            ErrorResponse("Not found"),
+            ErrorResponse("Object not found"),
             HttpStatus.NOT_FOUND
         )
     }

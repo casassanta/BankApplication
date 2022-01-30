@@ -1,6 +1,7 @@
 package com.gcc.bankapplication.controller
 
 import com.gcc.bankapplication.controller.request.CreateCustomerRequest
+import com.gcc.bankapplication.controller.request.UpdateCustomerRequest
 import com.gcc.bankapplication.controller.response.CustomerResponse
 import com.gcc.bankapplication.model.enums.Nationality
 import com.gcc.bankapplication.service.AddressService
@@ -43,7 +44,6 @@ class CustomerController(
     @PostMapping("/api/customers")
     @ResponseStatus(HttpStatus.CREATED)
     fun createCustomer(@RequestBody @Valid customerRequest: CreateCustomerRequest) {
-
         customerService.createCustomer(customerRequest.toCustomer(), customerRequest.addresses)
     }
 
@@ -51,6 +51,23 @@ class CustomerController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteCustomer(@PathVariable customerId: UUID) {
         customerService.delete(customerId)
+    }
+
+    @PutMapping("/api/customers/{customerId}")
+    @ResponseStatus(HttpStatus.OK)
+    fun updateCustomer(@PathVariable customerId: UUID, @RequestBody customerUpdate: UpdateCustomerRequest): CustomerResponse {
+
+        val previousCustomer = customerService.findById(customerId)
+        val previousAddresses = addressService.findByCustomer(previousCustomer)
+
+        val updatedCustomer = customerUpdate.toCustomerModel(previousCustomer)
+        val updatedAddresses = customerUpdate.addresses.map { address ->
+            address.toAddress(previousAddresses, updatedCustomer)
+        }
+        
+        customerService.update(updatedCustomer, updatedAddresses)
+
+        return updatedCustomer.toCustomerResponse(updatedAddresses.map { it.toAddressResponse() })
     }
 
 }

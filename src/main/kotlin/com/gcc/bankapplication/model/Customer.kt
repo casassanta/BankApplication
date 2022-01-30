@@ -41,8 +41,7 @@ data class Customer(
             birthDate = this.birthDate,
             nationality =  this.nationality,
             document = this.document.toDocumentResponse(),
-            addresses = addresses,
-            status = this.status
+            addresses = addresses
         )
     }
 
