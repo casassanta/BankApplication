@@ -2,33 +2,33 @@ package com.gcc.bankapplication.controller.request
 
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.gcc.bankapplication.model.Customer
-import com.gcc.bankapplication.model.enums.Nationalities
+import com.gcc.bankapplication.model.enums.Nationality
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 import java.util.*
 import javax.validation.Valid
 import javax.validation.constraints.Pattern
 
 
-data class PostCustomerRequest(
+data class CreateCustomerRequest(
 
-    @field:Pattern( regexp = "^[a-zA-Z]+\$", message = "Invalid characters for firstName.")
+    @field:Pattern( regexp = "^[a-zA-Z]+\$", message = "Invalid characters.")
     val firstName: String,
 
-    @field:Pattern( regexp = "^[a-zA-Z]+\$", message = "Invalid characters for lastName.")
+    @field:Pattern( regexp = "^[a-zA-Z]+\$", message = "Invalid characters.")
     val lastName: String,
 
-    val nationality: Nationalities,
+    val nationality: Nationality,
 
     @field:Valid
-    val document: PostDocumentRequest,
+    val document: CreateDocumentRequest,
 
     @JsonAlias("birthdate")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     val birthDate: LocalDate,
 
     @field:Valid
-    val addresses: List<PostAddressRequest>
+    val addresses: List<CreateAddressRequest>
 ) {
 
     fun toCustomer(): Customer {

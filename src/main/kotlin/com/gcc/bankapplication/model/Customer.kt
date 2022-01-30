@@ -2,8 +2,7 @@ package com.gcc.bankapplication.model
 
 import com.gcc.bankapplication.controller.response.AddressResponse
 import com.gcc.bankapplication.controller.response.CustomerResponse
-import com.gcc.bankapplication.model.enums.CustomerStatus
-import com.gcc.bankapplication.model.enums.Nationalities
+import com.gcc.bankapplication.model.enums.Nationality
 import java.time.LocalDate
 import java.util.*
 import javax.persistence.*
@@ -21,13 +20,18 @@ data class Customer(
     val birthDate: LocalDate,
 
     @Enumerated(EnumType.STRING)
-    val nationality: Nationalities,
+    val nationality: Nationality,
 
     val document: Document,
 
     @Enumerated(EnumType.STRING)
-    var status: CustomerStatus = CustomerStatus.ACTIVE
+    val status: Status = Status.ACTIVE
 ) {
+
+    enum class Status {
+        ACTIVE,
+        INACTIVE
+    }
 
     fun toCustomerResponse(addresses: List<AddressResponse>): CustomerResponse{
         return CustomerResponse(
@@ -41,4 +45,6 @@ data class Customer(
             status = this.status
         )
     }
+
 }
+

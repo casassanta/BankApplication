@@ -1,14 +1,13 @@
 package com.gcc.bankapplication.controller.request
 
 import com.gcc.bankapplication.model.Document
-import com.gcc.bankapplication.model.enums.DocumentType
 import javax.validation.constraints.Pattern
 
-data class PostDocumentRequest(
+data class CreateDocumentRequest(
 
-    val type: DocumentType,
+    val type: Document.Type,
 
-    @field:Pattern( regexp = "^[a-zA-Z0-9 ]+\$", message = "Invalid characters for document.number.")
+    @field:Pattern( regexp = "^[a-zA-Z0-9 ]+\$", message = "Invalid characters.")
     val number: String
 ){
 

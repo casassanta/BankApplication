@@ -1,11 +1,11 @@
 package com.gcc.bankapplication.controller.response
 
-import com.gcc.bankapplication.model.enums.AddressType
+import com.gcc.bankapplication.model.Address
 import java.util.*
 
 data class AddressResponse(
     val id: UUID,
-    val type: AddressType,
+    val type: Address.Type,
     val postCode: String,
     val address: String,
     val number: String,

@@ -1,8 +1,9 @@
 package com.gcc.bankapplication.controller.response
 
-import com.gcc.bankapplication.model.enums.DocumentType
+import com.gcc.bankapplication.model.Document
+
 
 data class DocumentResponse(
-    val type: DocumentType,
+    val type: Document.Type,
     val number: String
 )

@@ -10,7 +10,7 @@ class AddressService(
     private val addressRepository: AddressRepository
 ) {
 
-    fun findByCustomer(customer: Customer): List<Address>{
+    fun findByCustomer(customer: Customer): List<Address> {
         return addressRepository.findByCustomer(customer)
     }
 }
