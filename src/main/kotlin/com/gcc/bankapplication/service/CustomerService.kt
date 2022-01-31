@@ -9,7 +9,9 @@ import com.gcc.bankapplication.model.enums.Nationality
 import com.gcc.bankapplication.repository.AddressRepository
 import com.gcc.bankapplication.repository.CustomerRepository
 import org.springframework.stereotype.Service
+import java.lang.Exception
 import java.util.*
+import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
 
@@ -48,6 +50,10 @@ class CustomerService(
 
         val previousCustomer = findById(customerId)
         val previousAddresses = addressService.findByCustomer(previousCustomer)
+
+        if(previousCustomer.status == Customer.Status.INACTIVE){
+            throw(EntityNotFoundException())
+        }
 
         val updatedCustomer = customerUpdate.toCustomerModel(previousCustomer)
         val updatedAddresses = customerUpdate.addresses.map { address ->

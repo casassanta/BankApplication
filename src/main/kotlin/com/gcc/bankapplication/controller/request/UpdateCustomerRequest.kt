@@ -5,6 +5,7 @@ import com.gcc.bankapplication.controller.response.CustomerResponse
 import com.gcc.bankapplication.model.Address
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.enums.Nationality
+import com.gcc.bankapplication.validation.DateValidation
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDate
 import java.util.*
@@ -27,7 +28,7 @@ data class UpdateCustomerRequest(
     val document: UpdateDocumentRequest,
 
     @JsonAlias("birthdate")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @DateValidation
     val birthDate: LocalDate,
 
     @field:Valid

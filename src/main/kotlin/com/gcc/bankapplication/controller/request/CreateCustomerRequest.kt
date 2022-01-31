@@ -3,10 +3,12 @@ package com.gcc.bankapplication.controller.request
 import com.fasterxml.jackson.annotation.JsonAlias
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.enums.Nationality
+import com.gcc.bankapplication.validation.DateValidation
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDate
 import java.util.*
 import javax.validation.Valid
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
 
 
@@ -24,7 +26,7 @@ data class CreateCustomerRequest(
     val document: CreateDocumentRequest,
 
     @JsonAlias("birthdate")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @DateValidation
     val birthDate: LocalDate,
 
     @field:Valid
