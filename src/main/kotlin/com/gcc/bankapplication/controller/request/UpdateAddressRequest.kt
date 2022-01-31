@@ -21,12 +21,10 @@ data class UpdateAddressRequest(
 
     ) {
 
-    fun toAddress(previousAddress: List<Address>, customer:Customer): Address{
-
-        val addressId = previousAddress.first { it.type == this.type}.id
+    fun toAddress(previousAddress: Address, customer:Customer): Address{
 
         return Address(
-            id = addressId,
+            id = previousAddress.id,
             type = this.type,
             postCode = this.postCode,
             address = this.address,

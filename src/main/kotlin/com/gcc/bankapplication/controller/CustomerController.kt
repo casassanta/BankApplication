@@ -55,19 +55,8 @@ class CustomerController(
 
     @PutMapping("/api/customers/{customerId}")
     @ResponseStatus(HttpStatus.OK)
-    fun updateCustomer(@PathVariable customerId: UUID, @RequestBody customerUpdate: UpdateCustomerRequest): CustomerResponse {
-
-        val previousCustomer = customerService.findById(customerId)
-        val previousAddresses = addressService.findByCustomer(previousCustomer)
-
-        val updatedCustomer = customerUpdate.toCustomerModel(previousCustomer)
-        val updatedAddresses = customerUpdate.addresses.map { address ->
-            address.toAddress(previousAddresses, updatedCustomer)
-        }
-        
-        customerService.update(updatedCustomer, updatedAddresses)
-
-        return updatedCustomer.toCustomerResponse(updatedAddresses.map { it.toAddressResponse() })
+    fun updateCustomer(@PathVariable customerId: UUID, @RequestBody @Valid customerUpdate: UpdateCustomerRequest): CustomerResponse {
+        return customerService.update(customerId, customerUpdate)
     }
 
 }

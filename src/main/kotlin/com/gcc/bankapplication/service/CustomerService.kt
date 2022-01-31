@@ -1,6 +1,8 @@
 package com.gcc.bankapplication.service
 
 import com.gcc.bankapplication.controller.request.CreateAddressRequest
+import com.gcc.bankapplication.controller.request.UpdateCustomerRequest
+import com.gcc.bankapplication.controller.response.CustomerResponse
 import com.gcc.bankapplication.model.Address
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.enums.Nationality
@@ -14,7 +16,8 @@ import javax.transaction.Transactional
 @Service
 class CustomerService(
     private val customerRepository: CustomerRepository,
-    private val addressRepository: AddressRepository
+    private val addressRepository: AddressRepository,
+    private val addressService: AddressService
 ) {
 
     fun findAll(): List<Customer> {
@@ -41,9 +44,20 @@ class CustomerService(
     }
 
     @Transactional
-    fun update(customer: Customer, addresses: List<Address>){
-        customerRepository.save(customer)
-        addresses.map { addressRepository.save(it) }
+    fun update(customerId: UUID, customerUpdate: UpdateCustomerRequest): CustomerResponse {
+
+        val previousCustomer = findById(customerId)
+        val previousAddresses = addressService.findByCustomer(previousCustomer)
+
+        val updatedCustomer = customerUpdate.toCustomerModel(previousCustomer)
+        val updatedAddresses = customerUpdate.addresses.map { address ->
+            address.toAddress(previousAddresses.first { oldAddress -> oldAddress.type == address.type}, updatedCustomer)
+        }
+
+        customerRepository.save(updatedCustomer)
+        updatedAddresses.map { address -> addressRepository.save(address) }
+
+        return updatedCustomer.toCustomerResponse(updatedAddresses.map { it.toAddressResponse() })
     }
 
 }

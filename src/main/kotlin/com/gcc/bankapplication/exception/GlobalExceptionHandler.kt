@@ -18,7 +18,7 @@ class GlobalExceptionHandler {
     fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<ErrorResponse> {
       logger.info("Handling not found entity exception", e)
       return ResponseEntity<ErrorResponse>(
-          ErrorResponse("Entity Not found"),
+          ErrorResponse("Object Not found"),
           HttpStatus.NOT_FOUND
       )
     }
@@ -30,7 +30,7 @@ class GlobalExceptionHandler {
         when{
             e.cause is EntityNotFoundException -> {
                 return ResponseEntity<ErrorResponse>(
-                    ErrorResponse("Entity Not found"),
+                    ErrorResponse("Object Not found"),
                     HttpStatus.NOT_FOUND
                 )
             }
