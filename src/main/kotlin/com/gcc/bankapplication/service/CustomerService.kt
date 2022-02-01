@@ -9,7 +9,6 @@ import com.gcc.bankapplication.model.enums.Nationality
 import com.gcc.bankapplication.repository.AddressRepository
 import com.gcc.bankapplication.repository.CustomerRepository
 import org.springframework.stereotype.Service
-import java.lang.Exception
 import java.time.LocalDate
 import java.util.*
 import javax.persistence.EntityNotFoundException
