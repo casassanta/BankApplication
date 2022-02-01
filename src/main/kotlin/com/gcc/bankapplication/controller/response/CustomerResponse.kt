@@ -12,8 +12,7 @@ data class CustomerResponse(
     val birthDate: LocalDate,
     val nationality: Nationality,
     val document: DocumentResponse,
-    val addresses: List<AddressResponse>,
-    val status: Customer.Status
+    val addresses: List<AddressResponse>
 ) {
 
 }

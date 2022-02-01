@@ -1,6 +1,8 @@
 package com.gcc.bankapplication.controller.request
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.gcc.bankapplication.controller.response.CustomerResponse
+import com.gcc.bankapplication.model.Address
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.enums.Nationality
 import com.gcc.bankapplication.validation.DateValidation
@@ -8,11 +10,11 @@ import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDate
 import java.util.*
 import javax.validation.Valid
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
 
+data class UpdateCustomerRequest(
 
-data class CreateCustomerRequest(
+    val id: UUID,
 
     @field:Pattern( regexp = "^[a-zA-Z]+\$", message = "Invalid characters.")
     val firstName: String,
@@ -23,24 +25,25 @@ data class CreateCustomerRequest(
     val nationality: Nationality,
 
     @field:Valid
-    val document: CreateDocumentRequest,
+    val document: UpdateDocumentRequest,
 
     @JsonAlias("birthdate")
     @DateValidation
     val birthDate: String,
 
     @field:Valid
-    val addresses: List<CreateAddressRequest>
+    val addresses: List<UpdateAddressRequest>
 ) {
 
-    fun toCustomer(): Customer {
+    fun toCustomerModel(customer: Customer): Customer {
         return Customer(
-            id = UUID.randomUUID(),
+            id = this.id,
             firstName = this.firstName,
             lastName = this.lastName,
             birthDate = LocalDate.parse(this.birthDate),
             nationality = this.nationality,
-            document = this.document.toDocument()
+            document = this.document.toDocument(),
+            status = customer.status
         )
     }
 
