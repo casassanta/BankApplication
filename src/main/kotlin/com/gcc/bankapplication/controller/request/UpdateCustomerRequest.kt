@@ -29,7 +29,7 @@ data class UpdateCustomerRequest(
 
     @JsonAlias("birthdate")
     @DateValidation
-    val birthDate: LocalDate,
+    val birthDate: String,
 
     @field:Valid
     val addresses: List<UpdateAddressRequest>
@@ -40,7 +40,7 @@ data class UpdateCustomerRequest(
             id = this.id,
             firstName = this.firstName,
             lastName = this.lastName,
-            birthDate = this.birthDate,
+            birthDate = LocalDate.parse(this.birthDate),
             nationality = this.nationality,
             document = this.document.toDocument(),
             status = customer.status

@@ -1,25 +1,23 @@
 package com.gcc.bankapplication.validation
 
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
-class DateValidator : ConstraintValidator<DateValidation, LocalDate> {
+class DateValidator : ConstraintValidator<DateValidation, String> {
 
-    override fun isValid(date: LocalDate, context: ConstraintValidatorContext?): Boolean {
+    override fun isValid(date: String, context: ConstraintValidatorContext?): Boolean {
 
-        val dateNow = LocalDate.now()
+        val datePattern = DateTimeFormatter.ofPattern("uuuu-MM-dd")
 
-        if(dateNow.year - date.year > 18) {
-            return true
-        }else if (dateNow.year - date.year == 18) {
-            if(date.monthValue < dateNow.monthValue)
-                return true
-            else if(date.monthValue == dateNow.monthValue) {
-                return date.dayOfMonth <= dateNow.dayOfMonth
-            }
+        try{
+            datePattern.parse(date)
+        }catch (e: DateTimeParseException) {
+            return false
         }
 
-        return false
+        return true
     }
 }

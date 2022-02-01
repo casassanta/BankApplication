@@ -27,7 +27,7 @@ data class CreateCustomerRequest(
 
     @JsonAlias("birthdate")
     @DateValidation
-    val birthDate: LocalDate,
+    val birthDate: String,
 
     @field:Valid
     val addresses: List<CreateAddressRequest>
@@ -38,7 +38,7 @@ data class CreateCustomerRequest(
             id = UUID.randomUUID(),
             firstName = this.firstName,
             lastName = this.lastName,
-            birthDate = this.birthDate,
+            birthDate = LocalDate.parse(this.birthDate),
             nationality = this.nationality,
             document = this.document.toDocument()
         )

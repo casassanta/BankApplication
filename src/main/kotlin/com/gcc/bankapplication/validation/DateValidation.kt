@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
 @Constraint(validatedBy = [DateValidator::class])
 @MustBeDocumented
 annotation class DateValidation(
-    val message: String = "Please, the date must be valid and age must be +18",
+    val message: String = "Please, the date must be in the pattern yyyy-MM-dd",
     val groups: Array<KClass<Any>> = [],
     val payload: Array<KClass<Payload>> = []
 )

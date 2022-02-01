@@ -10,6 +10,7 @@ import com.gcc.bankapplication.repository.AddressRepository
 import com.gcc.bankapplication.repository.CustomerRepository
 import org.springframework.stereotype.Service
 import java.lang.Exception
+import java.time.LocalDate
 import java.util.*
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
@@ -45,25 +46,54 @@ class CustomerService(
         customerRepository.save(customer)
     }
 
-    @Transactional
     fun update(customerId: UUID, customerUpdate: UpdateCustomerRequest): CustomerResponse {
 
-        val previousCustomer = findById(customerId)
-        val previousAddresses = addressService.findByCustomer(previousCustomer)
+        val updatedCustomer = findById(customerId).copy(
+            firstName = customerUpdate.firstName,
+            lastName = customerUpdate.lastName,
+            birthDate = LocalDate.parse(customerUpdate.birthDate),
+            nationality = customerUpdate.nationality,
+            document = customerUpdate.document.toDocument()
+        )
 
-        if(previousCustomer.status == Customer.Status.INACTIVE){
+        if(updatedCustomer.status == Customer.Status.INACTIVE){
             throw(EntityNotFoundException())
         }
 
-        val updatedCustomer = customerUpdate.toCustomerModel(previousCustomer)
-        val updatedAddresses = customerUpdate.addresses.map { address ->
-            address.toAddress(previousAddresses.first { oldAddress -> oldAddress.type == address.type}, updatedCustomer)
+        val updatedAddresses = addressService.findByCustomer(updatedCustomer).map { address ->
+            address.copy(
+                type = customerUpdate.addresses.first { newAddress -> newAddress.type == address.type }.type,
+                postCode = customerUpdate.addresses.first { newAddress -> newAddress.type == address.type }.postCode,
+                address = customerUpdate.addresses.first { newAddress -> newAddress.type == address.type }.address,
+                number = customerUpdate.addresses.first { newAddress -> newAddress.type == address.type }.number,
+                complement = customerUpdate.addresses.first { newAddress -> newAddress.type == address.type }.complement
+            )
         }
 
-        customerRepository.save(updatedCustomer)
-        updatedAddresses.map { address -> addressRepository.save(address) }
-
+        saveUpdatedCustomer(updatedCustomer, updatedAddresses)
         return updatedCustomer.toCustomerResponse(updatedAddresses.map { it.toAddressResponse() })
+
+        //val previousCustomer = findById(customerId)
+        //val previousAddresses = addressService.findByCustomer(previousCustomer)
+
+        //if(previousCustomer.status == Customer.Status.INACTIVE){
+        //    throw(EntityNotFoundException())
+        //}
+
+        //val updatedCustomer = customerUpdate.toCustomerModel(previousCustomer)
+        //val updatedAddresses = customerUpdate.addresses.map { address ->
+        //    address.toAddress(previousAddresses.first { oldAddress -> oldAddress.type == address.type}, updatedCustomer)
+        //}
+
+        //saveUpdatedCustomer(updatedCustomer, updatedAddresses)
+
+        //return updatedCustomer.toCustomerResponse(updatedAddresses.map { it.toAddressResponse() })
+    }
+
+    @Transactional
+    fun saveUpdatedCustomer(customer: Customer, addresses: List<Address>){
+        customerRepository.save(customer)
+        addresses.map { address -> addressRepository.save(address) }
     }
 
 }
