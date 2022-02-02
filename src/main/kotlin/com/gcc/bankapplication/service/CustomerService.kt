@@ -3,13 +3,13 @@ package com.gcc.bankapplication.service
 import com.gcc.bankapplication.controller.request.CreateAddressRequest
 import com.gcc.bankapplication.controller.request.UpdateCustomerRequest
 import com.gcc.bankapplication.controller.response.CustomerResponse
+import com.gcc.bankapplication.exception.InvalidAddressesException
 import com.gcc.bankapplication.model.Address
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.enums.Nationality
 import com.gcc.bankapplication.repository.AddressRepository
 import com.gcc.bankapplication.repository.CustomerRepository
 import org.springframework.stereotype.Service
-import java.time.LocalDate
 import java.util.*
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
@@ -18,7 +18,6 @@ import javax.transaction.Transactional
 @Service
 class CustomerService(
     private val customerRepository: CustomerRepository,
-    private val addressRepository: AddressRepository,
     private val addressService: AddressService
 ) {
 
@@ -33,7 +32,8 @@ class CustomerService(
     @Transactional
     fun createCustomer(customer: Customer, addresses: List<CreateAddressRequest>) {
         val customerSaved = customerRepository.save(customer)
-        addresses.map { addressRepository.save(it.toAddress(customerSaved)) }
+        val addresses = addresses.map { address -> address.toAddress(customerSaved) }
+        addressService.createAddresses(addresses)
     }
 
     fun findById(customerId: UUID): Customer {
@@ -47,52 +47,42 @@ class CustomerService(
 
     fun update(customerId: UUID, customerUpdate: UpdateCustomerRequest): CustomerResponse {
 
-        val updatedCustomer = findById(customerId).copy(
-            firstName = customerUpdate.firstName,
-            lastName = customerUpdate.lastName,
-            birthDate = LocalDate.parse(customerUpdate.birthDate),
-            nationality = customerUpdate.nationality,
-            document = customerUpdate.document.toDocument()
-        )
+        val oldCustomer = findById(customerId)
+        val newCustomer = customerUpdate.toCustomerModel(customerId, oldCustomer.status)
 
-        if(updatedCustomer.status == Customer.Status.INACTIVE){
-            throw(EntityNotFoundException())
+        if(newCustomer.status == Customer.Status.INACTIVE){
+            throw EntityNotFoundException()
         }
 
-        val updatedAddresses = addressService.findByCustomer(updatedCustomer).map { address ->
-            address.copy(
-                type = customerUpdate.addresses.first { newAddress -> newAddress.type == address.type }.type,
-                postCode = customerUpdate.addresses.first { newAddress -> newAddress.type == address.type }.postCode,
-                address = customerUpdate.addresses.first { newAddress -> newAddress.type == address.type }.address,
-                number = customerUpdate.addresses.first { newAddress -> newAddress.type == address.type }.number,
-                complement = customerUpdate.addresses.first { newAddress -> newAddress.type == address.type }.complement
-            )
+        validateAddresses(customerUpdate)
+
+        val oldAddresses = addressService.findByCustomer(oldCustomer)
+        val newAddresses = customerUpdate.addresses.map{address ->
+            address.toAddress(oldAddresses.first{oldAddress ->  oldAddress.type == address.type}.id, newCustomer)
         }
 
-        saveUpdatedCustomer(updatedCustomer, updatedAddresses)
-        return updatedCustomer.toCustomerResponse(updatedAddresses.map { it.toAddressResponse() })
+        saveUpdatedCustomer(newCustomer, newAddresses)
 
-        //val previousCustomer = findById(customerId)
-        //val previousAddresses = addressService.findByCustomer(previousCustomer)
+        return newCustomer.toCustomerResponse(newAddresses.map { address -> address.toAddressResponse() })
+    }
 
-        //if(previousCustomer.status == Customer.Status.INACTIVE){
-        //    throw(EntityNotFoundException())
-        //}
+    private fun validateAddresses(customerUpdate: UpdateCustomerRequest) {
+        if (customerUpdate.addresses.none { address -> address.type == Address.Type.BILLING }) {
+            throw InvalidAddressesException("Missing Billing Address")
+        }
+        if (customerUpdate.addresses.none { address -> address.type == Address.Type.DELIVERY }) {
+            throw InvalidAddressesException("Missing Delivery Address")
+        }
 
-        //val updatedCustomer = customerUpdate.toCustomerModel(previousCustomer)
-        //val updatedAddresses = customerUpdate.addresses.map { address ->
-        //    address.toAddress(previousAddresses.first { oldAddress -> oldAddress.type == address.type}, updatedCustomer)
-        //}
-
-        //saveUpdatedCustomer(updatedCustomer, updatedAddresses)
-
-        //return updatedCustomer.toCustomerResponse(updatedAddresses.map { it.toAddressResponse() })
+        if(customerUpdate.addresses.size != 2){
+            throw InvalidAddressesException("It should have only one Billing Address and only one Delivery Address")
+        }
     }
 
     @Transactional
     fun saveUpdatedCustomer(customer: Customer, addresses: List<Address>){
         customerRepository.save(customer)
-        addresses.map { address -> addressRepository.save(address) }
+        addressService.createAddresses(addresses)
     }
 
 }

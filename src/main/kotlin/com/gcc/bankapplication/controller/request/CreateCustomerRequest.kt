@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.enums.Nationality
 import com.gcc.bankapplication.validation.DateValidation
-import org.springframework.format.annotation.DateTimeFormat
+import java.lang.RuntimeException
 import java.time.LocalDate
 import java.util.*
 import javax.validation.Valid
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
 
 
