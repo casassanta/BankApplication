@@ -2,6 +2,7 @@ package com.gcc.bankapplication.controller.request
 
 import com.gcc.bankapplication.model.Address
 import com.gcc.bankapplication.model.Customer
+import java.util.*
 import javax.validation.constraints.NotBlank
 
 data class UpdateAddressRequest(
@@ -21,10 +22,10 @@ data class UpdateAddressRequest(
 
     ) {
 
-    fun toAddress(previousAddress: Address, customer:Customer): Address{
+    fun toAddress(addressId: UUID, customer: Customer): Address{
 
         return Address(
-            id = previousAddress.id,
+            id = addressId,
             type = this.type,
             postCode = this.postCode,
             address = this.address,

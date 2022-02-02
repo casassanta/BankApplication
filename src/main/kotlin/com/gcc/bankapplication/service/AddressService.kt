@@ -13,4 +13,10 @@ class AddressService(
     fun findByCustomer(customer: Customer): List<Address> {
         return addressRepository.findByCustomer(customer)
     }
+
+    fun createAddresses(addresses: List<Address>) {
+        addresses.map { address -> addressRepository.save(address) }
+    }
+
+
 }

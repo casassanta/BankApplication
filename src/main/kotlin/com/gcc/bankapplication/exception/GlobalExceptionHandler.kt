@@ -1,6 +1,5 @@
 package com.gcc.bankapplication.exception
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,36 +13,6 @@ import javax.persistence.EntityNotFoundException
 class GlobalExceptionHandler {
 
     private val logger = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
-
-
-    @ExceptionHandler(EntityNotFoundException::class)
-    fun handleEntityNotFoundException(e: EntityNotFoundException): ResponseEntity<ErrorResponse> {
-      logger.info("Handling not found entity exception", e)
-
-      return ResponseEntity<ErrorResponse>(
-          ErrorResponse("Object Not found"),
-          HttpStatus.NOT_FOUND
-      )
-    }
-
-    @ExceptionHandler(JpaObjectRetrievalFailureException::class)
-    fun handleJpaObjectRetrievalFailureException(e: JpaObjectRetrievalFailureException): ResponseEntity<ErrorResponse> {
-        logger.info("Handling Jpa Object Retieval Failure Exception", e)
-
-        when{
-            e.cause is EntityNotFoundException -> {
-                return ResponseEntity<ErrorResponse>(
-                    ErrorResponse("Object Not found"),
-                    HttpStatus.NOT_FOUND
-                )
-            }
-        }
-
-        return ResponseEntity<ErrorResponse>(
-            ErrorResponse("Object not found"),
-            HttpStatus.NOT_FOUND
-        )
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValid(e: MethodArgumentNotValidException): ResponseEntity<ErrorResponse>{
@@ -60,7 +29,27 @@ class GlobalExceptionHandler {
             ErrorResponse("Invalid argument(s)", fieldErrors),
             HttpStatus.BAD_REQUEST
         )
+    }
 
+    @ExceptionHandler(InvalidAddressesException::class)
+    fun handleMissingAddress(e: InvalidAddressesException): ResponseEntity<ErrorResponse> {
+        logger.info("Handling missing address exception", e)
+
+        return ResponseEntity<ErrorResponse>(
+            ErrorResponse(e.message),
+            HttpStatus.BAD_REQUEST
+        )
+    }
+
+
+    @ExceptionHandler(JpaObjectRetrievalFailureException::class)
+    fun handleJpaObjectRetrievalFailureException(e: JpaObjectRetrievalFailureException): ResponseEntity<ErrorResponse> {
+        logger.info("Handling Jpa Object Retieval Failure Exception", e)
+
+        return ResponseEntity<ErrorResponse>(
+            ErrorResponse("Object not found"),
+            HttpStatus.NOT_FOUND
+        )
     }
 
     @ExceptionHandler(Throwable::class)

@@ -14,8 +14,6 @@ import javax.validation.constraints.Pattern
 
 data class UpdateCustomerRequest(
 
-    val id: UUID,
-
     @field:Pattern( regexp = "^[a-zA-Z]+\$", message = "Invalid characters.")
     val firstName: String,
 
@@ -35,15 +33,15 @@ data class UpdateCustomerRequest(
     val addresses: List<UpdateAddressRequest>
 ) {
 
-    fun toCustomerModel(customer: Customer): Customer {
+    fun toCustomerModel(customerId: UUID, customerStatus: Customer.Status): Customer {
         return Customer(
-            id = this.id,
+            id = customerId,
             firstName = this.firstName,
             lastName = this.lastName,
             birthDate = LocalDate.parse(this.birthDate),
             nationality = this.nationality,
             document = this.document.toDocument(),
-            status = customer.status
+            status = customerStatus
         )
     }
 
