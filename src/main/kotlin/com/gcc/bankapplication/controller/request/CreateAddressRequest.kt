@@ -2,12 +2,14 @@ package com.gcc.bankapplication.controller.request
 
 import com.gcc.bankapplication.model.Address
 import com.gcc.bankapplication.model.Customer
+import com.gcc.bankapplication.validation.AddressTypeValidation
 import java.util.*
 import javax.validation.constraints.NotBlank
 
 data class CreateAddressRequest(
 
-    val type: Address.Type,
+    @field:AddressTypeValidation
+    val type: String,
 
     @field:NotBlank
     val postCode: String,
@@ -25,7 +27,7 @@ data class CreateAddressRequest(
     fun toAddress(customer: Customer): Address{
         return Address(
             id = UUID.randomUUID(),
-            type = this.type,
+            type = Address.Type.valueOf(this.type),
             postCode = this.postCode,
             address = this.address,
             number = this .number,

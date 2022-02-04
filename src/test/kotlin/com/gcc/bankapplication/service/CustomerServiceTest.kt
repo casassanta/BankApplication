@@ -8,8 +8,10 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import java.lang.RuntimeException
 import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 class CustomerServiceTest{
 
@@ -66,6 +68,14 @@ class CustomerServiceTest{
         // Asserts
         verify { customerRepository.save(inactiveCustomer) }
 
+    }
+
+    @Test
+    fun `should fail delete customer that doesnt exists on database`(){
+        val customerId = UUID.randomUUID()
+        every { customerRepository.getById(customerId) } throws JpaObjectRetrievalFailureException(EntityNotFoundException())
+
+        assertThrows(JpaObjectRetrievalFailureException::class.java) { customerService.delete(customerId) }
     }
 
 
