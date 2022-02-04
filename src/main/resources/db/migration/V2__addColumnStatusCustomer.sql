@@ -1,3 +1,0 @@
-ALTER TABLE customer
-ADD COLUMN status text
-DEFAULT 'ACTIVE';

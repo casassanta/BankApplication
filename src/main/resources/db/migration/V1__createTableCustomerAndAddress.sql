@@ -2,10 +2,12 @@ CREATE TABLE customer(
     id UUID primary key,
     first_name text not null,
     last_name text not null,
+    email text not null,
     birth_date date not null,
     nationality text not null,
     type text not null,
     number text not null,
+    status text not null,
     unique(type, number)
 );
 

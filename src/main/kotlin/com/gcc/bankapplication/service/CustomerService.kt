@@ -67,6 +67,7 @@ class CustomerService(
     }
 
     private fun validateAddresses(customerUpdate: UpdateCustomerRequest) {
+        // pode receber os dois tipos nulable e dentro do método, eu só extraio os dois dentro de uma lista de string e verifico depois
         if (customerUpdate.addresses.none { address -> address.type == Address.Type.BILLING }) {
             throw InvalidAddressesException("Missing Billing Address")
         }

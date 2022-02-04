@@ -8,6 +8,8 @@ import java.lang.RuntimeException
 import java.time.LocalDate
 import java.util.*
 import javax.validation.Valid
+import javax.validation.constraints.Email
+import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 
 
@@ -18,6 +20,10 @@ data class CreateCustomerRequest(
 
     @field:Pattern( regexp = "^[a-zA-Z]+\$", message = "Invalid characters.")
     val lastName: String,
+
+    @field:NotNull(message = "Email missing")
+    @field:Email
+    val email: String,
 
     val nationality: Nationality,
 
@@ -37,6 +43,7 @@ data class CreateCustomerRequest(
             id = UUID.randomUUID(),
             firstName = this.firstName,
             lastName = this.lastName,
+            email = this.email,
             birthDate = LocalDate.parse(this.birthDate),
             nationality = this.nationality,
             document = this.document.toDocument()
