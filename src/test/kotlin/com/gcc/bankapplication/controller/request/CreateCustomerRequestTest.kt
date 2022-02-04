@@ -16,6 +16,7 @@ class CreateCustomerRequestTest{
         firstName = "Guilherme",
         lastName = "Casassanta",
         nationality = Nationality.ALBANIA,
+        email = "guilherme@gmail.com",
         document = CreateDocumentRequest(Document.Type.ID, "100"),
         birthDate = "1991-12-10",
         addresses = listOf(
@@ -43,6 +44,7 @@ class CreateCustomerRequestTest{
             id = actualCustomer.id,
             firstName = createCustomerRequest.firstName,
             lastName = createCustomerRequest.lastName,
+            email = createCustomerRequest.email,
             birthDate = LocalDate.parse(createCustomerRequest.birthDate),
             nationality = createCustomerRequest.nationality,
             document = Document(Document.Type.ID, "100")

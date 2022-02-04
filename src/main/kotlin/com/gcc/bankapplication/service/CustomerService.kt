@@ -58,7 +58,7 @@ class CustomerService(
 
         val oldAddresses = addressService.findByCustomer(oldCustomer)
         val newAddresses = customerUpdate.addresses.map{address ->
-            address.toAddress(oldAddresses.first{oldAddress ->  oldAddress.type == address.type}.id, newCustomer)
+            address.toAddress(oldAddresses.first{oldAddress ->  oldAddress.type == Address.Type.valueOf(address.type)}.id, newCustomer)
         }
 
         saveUpdatedCustomer(newCustomer, newAddresses)
@@ -68,10 +68,10 @@ class CustomerService(
 
     private fun validateAddresses(customerUpdate: UpdateCustomerRequest) {
         // pode receber os dois tipos nulable e dentro do método, eu só extraio os dois dentro de uma lista de string e verifico depois
-        if (customerUpdate.addresses.none { address -> address.type == Address.Type.BILLING }) {
+        if (customerUpdate.addresses.none { address -> Address.Type.valueOf(address.type) == Address.Type.BILLING }) {
             throw InvalidAddressesException("Missing Billing Address")
         }
-        if (customerUpdate.addresses.none { address -> address.type == Address.Type.DELIVERY }) {
+        if (customerUpdate.addresses.none { address -> Address.Type.valueOf(address.type) == Address.Type.DELIVERY }) {
             throw InvalidAddressesException("Missing Delivery Address")
         }
 
