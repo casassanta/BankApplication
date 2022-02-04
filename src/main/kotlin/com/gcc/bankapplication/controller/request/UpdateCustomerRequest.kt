@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDate
 import java.util.*
 import javax.validation.Valid
+import javax.validation.constraints.Email
 import javax.validation.constraints.Pattern
 
 data class UpdateCustomerRequest(
@@ -19,6 +20,9 @@ data class UpdateCustomerRequest(
 
     @field:Pattern( regexp = "^[a-zA-Z]+\$", message = "Invalid characters.")
     val lastName: String,
+
+    @field:Email
+    val email: String,
 
     val nationality: Nationality,
 
@@ -38,6 +42,7 @@ data class UpdateCustomerRequest(
             id = customerId,
             firstName = this.firstName,
             lastName = this.lastName,
+            email = this.email,
             birthDate = LocalDate.parse(this.birthDate),
             nationality = this.nationality,
             document = this.document.toDocument(),

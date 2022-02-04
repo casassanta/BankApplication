@@ -7,7 +7,6 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import javax.persistence.EntityNotFoundException
 
 @ControllerAdvice
 class GlobalExceptionHandler {

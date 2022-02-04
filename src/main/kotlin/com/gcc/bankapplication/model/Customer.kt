@@ -17,6 +17,8 @@ data class Customer(
 
     val lastName: String,
 
+    val email: String,
+
     val birthDate: LocalDate,
 
     @Enumerated(EnumType.STRING)
@@ -38,6 +40,7 @@ data class Customer(
             id = this.id,
             firstName = this.firstName,
             lastName = this.lastName,
+            email = this.email,
             birthDate = this.birthDate,
             nationality =  this.nationality,
             document = this.document.toDocumentResponse(),
