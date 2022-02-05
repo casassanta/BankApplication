@@ -6,6 +6,7 @@ import com.gcc.bankapplication.model.Address
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.enums.Nationality
 import com.gcc.bankapplication.validation.DateValidation
+import com.gcc.bankapplication.validation.NationalityValidation
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDate
 import java.util.*
@@ -24,7 +25,8 @@ data class UpdateCustomerRequest(
     @field:Email
     val email: String,
 
-    val nationality: Nationality,
+    @field:NationalityValidation
+    val nationality: String,
 
     @field:Valid
     val document: UpdateDocumentRequest,
@@ -44,7 +46,7 @@ data class UpdateCustomerRequest(
             lastName = this.lastName,
             email = this.email,
             birthDate = LocalDate.parse(this.birthDate),
-            nationality = this.nationality,
+            nationality = Nationality.valueOf(this.nationality),
             document = this.document.toDocument(),
             status = customerStatus
         )
