@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.enums.Nationality
 import com.gcc.bankapplication.validation.DateValidation
+import com.gcc.bankapplication.validation.NationalityValidation
 import java.lang.RuntimeException
 import java.time.LocalDate
 import java.util.*
@@ -25,7 +26,8 @@ data class CreateCustomerRequest(
     @field:Email
     val email: String,
 
-    val nationality: Nationality,
+    @field:NationalityValidation
+    val nationality: String,
 
     @field:Valid
     val document: CreateDocumentRequest,
@@ -45,7 +47,7 @@ data class CreateCustomerRequest(
             lastName = this.lastName,
             email = this.email,
             birthDate = LocalDate.parse(this.birthDate),
-            nationality = this.nationality,
+            nationality = Nationality.valueOf(this.nationality),
             document = this.document.toDocument()
         )
     }
