@@ -15,20 +15,20 @@ class CreateCustomerRequestTest{
     private val createCustomerRequest = CreateCustomerRequest(
         firstName = "Guilherme",
         lastName = "Casassanta",
-        nationality = Nationality.ALBANIA,
+        nationality = "BRAZIL",
         email = "guilherme@gmail.com",
-        document = CreateDocumentRequest(Document.Type.ID, "100"),
+        document = CreateDocumentRequest("ID", "100"),
         birthDate = "1991-12-10",
         addresses = listOf(
             CreateAddressRequest(
-                type = Address.Type.BILLING,
+                type = "BILLING",
                 postCode =  "38408",
                 number = "10",
                 address = "Jose Miguel Saramago",
                 complement = "Apto 101"
             ),
             CreateAddressRequest(
-                type = Address.Type.DELIVERY,
+                type = "DELIVERY",
                 postCode =  "38408",
                 number = "10",
                 address = "Jose Miguel Saramago",
@@ -46,7 +46,7 @@ class CreateCustomerRequestTest{
             lastName = createCustomerRequest.lastName,
             email = createCustomerRequest.email,
             birthDate = LocalDate.parse(createCustomerRequest.birthDate),
-            nationality = createCustomerRequest.nationality,
+            nationality = Nationality.valueOf(createCustomerRequest.nationality),
             document = Document(Document.Type.ID, "100")
         )
 
