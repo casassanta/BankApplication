@@ -25,6 +25,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:8.0.5")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("io.mockk:mockk:1.12.2")
+    testImplementation("com.ninja-squad:springmockk:3.1.0")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
