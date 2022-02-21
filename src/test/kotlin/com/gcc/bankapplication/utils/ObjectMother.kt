@@ -1,5 +1,8 @@
 package com.gcc.bankapplication.utils
 
+import com.gcc.bankapplication.controller.response.AddressResponse
+import com.gcc.bankapplication.controller.response.CustomerResponse
+import com.gcc.bankapplication.controller.response.DocumentResponse
 import com.gcc.bankapplication.model.Address
 import com.gcc.bankapplication.model.Customer
 import com.gcc.bankapplication.model.Document
@@ -43,6 +46,36 @@ object ObjectMother {
             number = "2",
             complement = "2",
             customer = customer
+        )
+    }
+
+    fun getCustomerResponse(customer: Customer, addresses: List<Address>): CustomerResponse{
+        return CustomerResponse(
+            id = customer.id,
+            firstName = customer.firstName,
+            lastName = customer.lastName,
+            email = customer.email,
+            birthDate = customer.birthDate,
+            nationality = customer.nationality,
+            document = DocumentResponse(customer.document.type, customer.document.number),
+            addresses = listOf(
+                AddressResponse(
+                    id = addresses[0].id,
+                    type = addresses[0].type,
+                    postCode = addresses[0].postCode,
+                    address = addresses[0].address,
+                    number = addresses[0].number,
+                    complement = addresses[0].complement
+                ),
+                AddressResponse(
+                    id = addresses[1].id,
+                    type = addresses[1].type,
+                    postCode = addresses[1].postCode,
+                    address = addresses[1].address,
+                    number = addresses[1].number,
+                    complement = addresses[1].complement
+                )
+            )
         )
     }
 
